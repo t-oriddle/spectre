@@ -164,6 +164,11 @@
   #about dd{margin:0;font-size:12px;line-height:1.55;color:var(--text)}
   #about dd small{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--text);margin-top:3px}
   #about dd a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(var(--fg-a),.35);padding-bottom:3px} #about dd a:hover{border-color:var(--text)}
+  /* タイリング画面の ABOUT は白地・黒字。題字の画面は黒地・白字のまま */
+  #wrap.tiling #about{background:rgba(238,240,237,.9)}
+  #wrap.tiling #about .col,#wrap.tiling #about .col *{color:#141b20}
+  #wrap.tiling #about .hr{background:rgba(20,27,32,.14)}
+  #wrap.tiling #about dd a{border-bottom-color:rgba(20,27,32,.35)}
   #about .note{font-size:13px;line-height:2;color:var(--text);margin-top:26px;letter-spacing:.02em;text-align:justify}
   #about .note.intro{margin-top:0} #about .note.follow{margin-top:10px} #about .note.en.follow{margin-top:8px}
   #about .note.en{font-size:12px;line-height:1.75;margin-top:14px;font-family:"Helvetica Neue",Arial,"Hiragino Sans",sans-serif;letter-spacing:.01em;text-align:left}
@@ -212,7 +217,7 @@
   <div id="about" role="dialog" aria-label="ABOUT">
     <div class="col">
       <button class="x" id="aboutClose" title="閉じる"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-      <p class="note intro">「Spectre」は、2023年に見つかった「非周期モノタイル」です。たった一種類の形を回転させながら並べるだけで平面を無限に埋めつくせます。しかも、同じ配置が周期的に繰り返されることはありません。</p>
+      <p class="note intro">「Spectre」は、2023年に見つかった「非周期モノタイル」です。たった一種類の形を回転させながら並べるだけで平面を無限に埋め尽くせます。しかも、同じ配置が周期的に繰り返されることはありません。</p>
       <p class="note intro follow">このサイトでは、折り紙で厳密に再現したそのタイルが敷き詰められていく様子を体験できます。TUTORIAL では、46工程の 3D 折り図を見ながら実際にタイルを折ることができます。</p>
       <p class="note en">Spectre is an aperiodic monotile discovered in 2023. Copies of this single shape, placed with rotations alone, cover the plane without end, and yet the arrangement never repeats periodically.</p>
       <p class="note en follow">This site lets you watch that tile, reproduced exactly in origami, spread across the plane. In TUTORIAL you can fold the tile yourself, following a 3D diagram of 46 steps.</p>
@@ -856,14 +861,14 @@ function rebuildTitleFx(){
   for(let y=y1-1;y>=y0;y--) for(let x=fxW-2;x>=1;x--){ const i=y*fxW+x; titleDT[i]=Math.min(titleDT[i],titleDT[i+1]+1,titleDT[i+fxW]+1,titleDT[i+fxW-1]+1.4,titleDT[i+fxW+1]+1.4); }
   let seed=0x51ec7e;
   const rnd=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;};
-  const target=Math.min(6500,Math.round(candidates.length*3.4)),stride=candidates.length/Math.max(1,target);   // 芯線 1px ぶん粒を増やす
+  const target=Math.min(7000,Math.round(candidates.length*3.8)),stride=candidates.length/Math.max(1,target);   // 芯線 1px ぶん粒を増やす
   titleParticles=[];
   const startFlow=performance.now()*.001;
   for(let i=0;i<candidates.length&&titleParticles.length<target;i+=stride){
     const p=candidates[Math.min(candidates.length-1,i|0)];
     const bx=p[0]+(rnd()-.5)*.9,by=p[1]+(rnd()-.5)*.9;
-    const cohort=rnd(),far=cohort<.12,mid=!far&&cohort<.40;
-    const amp=(far?22+rnd()*23:mid?10+rnd()*8:1.0+rnd()*1.6)*fxK;   // 近い粒は芯線から 1〜2.6px の範囲
+    const cohort=rnd(),far=cohort<.08,mid=!far&&cohort<.32;
+    const amp=(far?22+rnd()*23:mid?4.5+rnd()*4:1.6+rnd()*2.0)*fxK;   // 中距離は輪郭のすぐ外、近い粒は字の内側で泡立つ
     const sp=(far?.38+rnd()*.48:mid?.48+rnd()*.58:.62+rnd()*.72)*dotK;
     const ph=rnd()*Math.PI*2,loose=.36+.64*Math.sin(startFlow*.31+ph*.41)**2;
     const x0=bx+Math.sin(startFlow*.54+ph+by*.009)*amp*loose+Math.sin(startFlow*.21+ph*1.71)*amp*.32;
@@ -871,7 +876,7 @@ function rebuildTitleFx(){
     titleParticles.push({bx,by,x:x0,y:y0,vx:(rnd()-.5)*.003,vy:(rnd()-.5)*.003,
       ph,w:.72+rnd()*1.35,amp,far,mid,sp,
       a:(far?.16:mid?.27:.44)+rnd()*(far?.27:mid?.33:.34),
-      jewel:false,depth:.72+rnd()*.56});
+      jewel:false,depth:.72+rnd()*.56,fl:.7+rnd()*.9});
   }
   lastTitleFxT=0;
   titleDust=[];
@@ -920,14 +925,14 @@ function drawTitleFx(now){
     const dx=tx-p.x,dy=ty-p.y;
     const curlX=Math.sin(flowT*.72+p.ph+p.by*.021)+.52*Math.sin(flowT*.29+p.ph*1.73);
     const curlY=Math.cos(flowT*.63+p.ph*1.31+p.bx*.013)+.46*Math.sin(flowT*.26+p.ph*.77);
-    const wander=p.far?1:p.mid?.58:.23;
+    const wander=p.far?1:p.mid?.75:.5;
     p.vx+=(dx*.000020+curlX*.000035*fxK*p.w*wander)*dt;
     p.vy+=(dy*.000020+(curlY*.000031*p.w*wander-.0000018*wander)*fxK)*dt;
     p.vx*=damp;p.vy*=damp;p.x+=p.vx*dt;p.y+=p.vy*dt;
     const dist=Math.hypot(p.x-p.bx,p.y-p.by);
-    const limit=(p.far?50:p.mid?28:4)*fxK;
+    const limit=(p.far?50:p.mid?13:5.5)*fxK;
     if(dist>limit){p.x=p.bx+(p.x-p.bx)*.91;p.y=p.by+(p.y-p.by)*.91;p.vx*=.72;p.vy*=.72;}
-    const pulse=.62+.38*Math.sin(now*.00083+p.ph);
+    const pulse=p.far?.62+.38*Math.sin(now*.00083+p.ph):p.mid?.55+.45*Math.sin(now*.0016*p.fl+p.ph*2.3):.5+.5*Math.sin(now*.0022*p.fl+p.ph*3.1);   // 近い粒ほど速く瞬く
     const cohesion=Math.max(.34,1-dist/(limit*1.45));
     const wave=.72+.28*(.5+.5*Math.sin(flowT*1.08+p.bx*.032+p.by*.011));   // 場所で揃って暗くなる波は浅く
     const speedGlow=Math.min(1,Math.hypot(p.vx,p.vy)*58/fxK);
