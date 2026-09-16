@@ -29,8 +29,8 @@
     position:absolute; inset:0; pointer-events:none;
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
-    mask-image: linear-gradient(to bottom, black 0%, transparent 17%, transparent 83%, black 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 17%, transparent 83%, black 100%);
+    mask-image: linear-gradient(to bottom, black 0%, transparent 23%, transparent 83%, black 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 23%, transparent 83%, black 100%);
   }
   #light{
     position:absolute; inset:0; pointer-events:none; mix-blend-mode:soft-light;
@@ -41,7 +41,7 @@
     position:absolute; inset:0; pointer-events:none;
     background:
       radial-gradient(ellipse 125% 96% at 50% 42%, rgba(0,0,0,0) 40%, rgba(0,0,0,.12) 64%, rgba(0,0,0,.72) 100%),
-      linear-gradient(to bottom, rgba(3,6,8,.58), rgba(0,0,0,0) 17%),
+      linear-gradient(to bottom, rgba(3,6,8,.62), rgba(0,0,0,0) 23%),
       linear-gradient(to top, rgba(3,6,8,.68), rgba(0,0,0,0) 18%);
   }
   #titleBackdrop{
@@ -130,8 +130,7 @@
   #fade{position:absolute;inset:0;background:#070b0e;opacity:0;pointer-events:none;z-index:60;transition:opacity .75s cubic-bezier(.33,0,.25,1)}
   #wrap.leaving #cv{filter:blur(7px) brightness(.55) !important;transform:scale(1.07);transition:filter .75s,transform .75s}
   #wrap.leaving #nav,#wrap.leaving #mark,#wrap.leaving #ctrl,#wrap.leaving #hint,#wrap.leaving #titleFx,#wrap.leaving #titleBackdrop{opacity:0 !important;transition:opacity .35s}
-  .navb{text-shadow:0 0 6px rgba(7,11,14,.9),0 1px 14px rgba(7,11,14,.7)}
-  @media (max-width:640px){ #nav{top:26px;gap:18px} #wrap.tiling #nav{top:88px} #wrap.tiling .navb{padding:9px 2px 8px} .navb{font-size:11.5px;letter-spacing:.26em;opacity:.92} }
+  @media (max-width:640px){ #nav{top:20px;gap:18px} #mark{top:66px} #ctrl{top:64px} .navb{font-size:11.5px;letter-spacing:.26em;opacity:.92} }
 
   /* ABOUT: 画面いっぱいの薄い幕に、左揃えの一列。箱は作らない */
   #about{position:absolute;inset:0;z-index:40;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch;background:rgba(var(--ink-a),.86);
@@ -142,7 +141,7 @@
   #about .x svg{width:18px;height:18px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round}
   #about .x:hover{opacity:1}
   #about .col{position:relative;width:min(600px,86vw);color:var(--text);margin:auto;padding:56px 0 48px}
-  #about .kicker{font-family:var(--mono);font-size:10px;letter-spacing:.4em;color:var(--text)}
+  #about .kicker{font-family:var(--mono);font-size:12px;line-height:1.55;letter-spacing:.22em;color:var(--text)}
   #about .name{font:400 16px/1.4 "Hiragino Sans","Yu Gothic UI",sans-serif;letter-spacing:.14em;margin:14px 0 10px;color:var(--text)}
   #about .role{font-family:var(--mono);font-size:10px;letter-spacing:.26em;color:var(--text)}
   #about .sns{display:flex;gap:18px;margin:26px 0 0}
