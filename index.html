@@ -12,7 +12,7 @@
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html,body{height:100%; overflow:hidden;}
-  body{ background:var(--ink); color:var(--text);
+  body{ background:var(--ink); color:var(--text); -webkit-tap-highlight-color:transparent;
         font-family:"Hiragino Sans","Yu Gothic UI",sans-serif; }
   #wrap{position:fixed; inset:0; perspective:1100px; overflow:hidden;}
   #cv{position:absolute; inset:-25%; width:150%; height:150%;
@@ -131,7 +131,7 @@
   #wrap.leaving #cv{filter:blur(7px) brightness(.55) !important;transform:scale(1.07);transition:filter .75s,transform .75s}
   #wrap.leaving #nav,#wrap.leaving #mark,#wrap.leaving #ctrl,#wrap.leaving #hint,#wrap.leaving #titleFx,#wrap.leaving #titleBackdrop{opacity:0 !important;transition:opacity .35s}
   .navb{text-shadow:0 0 6px rgba(7,11,14,.9),0 1px 14px rgba(7,11,14,.7)}
-  @media (max-width:640px){ #nav{top:74px;gap:18px} .navb{font-size:11.5px;letter-spacing:.26em;opacity:.92} }
+  @media (max-width:640px){ #nav{top:26px;gap:18px} #wrap.tiling #nav{top:88px} #wrap.tiling .navb{padding:9px 2px 8px} .navb{font-size:11.5px;letter-spacing:.26em;opacity:.92} }
 
   /* ABOUT: 画面いっぱいの薄い幕に、左揃えの一列。箱は作らない */
   #about{position:absolute;inset:0;z-index:40;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch;background:rgba(var(--ink-a),.86);
@@ -1283,7 +1283,7 @@ function render(now){
   }
   const A=viewA(now);
   const chromeUI=!(mode==="paper"||mode==="coloring"||mode==="aligning"||mode==="folding"||mode==="unfolding");
-  document.getElementById('navTop').hidden=!chromeUI;
+  document.getElementById('navTop').hidden=!chromeUI; document.getElementById('wrap').classList.toggle('tiling',chromeUI);
   ctrl.style.opacity=chromeUI?"1":"0";
   ctrl.style.pointerEvents=chromeUI?"auto":"none";
   titleWord.style.opacity=(mode==="paper"&&smooth01((now-titleIntroT-100)/900)>0.05)?"1":"0";
