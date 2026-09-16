@@ -63,6 +63,8 @@
   #axes .btn span{font-size:9px}
   #axes .btn.on{background:var(--text);color:var(--ink)}
   #axes #flip{margin-right:4px}
+  #shadowBtn{height:26px;border-radius:7px;padding:0 8px 0 6px;gap:4px}   /* 大きさは軸ボタンと同じ */
+  #shadowBox{align-items:center}
   #shadowBtn.on{background:var(--text);color:var(--ink)}   /* 選択中は他と同じく白黒反転 */
   #admin .btn{border:1px solid rgba(var(--fg-a),.18);height:26px;font-size:9.5px}
   #nav{position:absolute;left:50%;top:22px;transform:translateX(-50%);display:flex;gap:28px;align-items:center;z-index:5}
@@ -128,6 +130,7 @@
   #about dd small{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--text);margin-top:3px}
   #about dd a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(var(--fg-a),.35);padding-bottom:3px} #about dd a:hover{border-color:var(--text)}
   #about .note{font-size:13px;line-height:2;color:var(--text);margin-top:26px;letter-spacing:.02em;text-align:justify}
+  #about .note.intro{margin-top:0} #about .note.follow{margin-top:10px} #about .note.en.follow{margin-top:8px}
   #about .note.en{font-size:12px;line-height:1.75;margin-top:14px;font-family:"Helvetica Neue",Arial,"Hiragino Sans",sans-serif;letter-spacing:.01em;text-align:left}
   @media (max-width:640px){ #about dl{grid-template-columns:1fr;row-gap:6px} #about dt{margin-top:10px} #about .col{width:84vw} }
   #boot .t{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:var(--mono);font-size:12px;letter-spacing:.34em;color:var(--sub);animation:pulse 1.6s ease-in-out infinite}
@@ -148,7 +151,7 @@
     /* 上段を 月・太陽・（空き）・影 の 4 枡にして、下段の 4 つと縦に揃える */
     #ctrl{padding:0;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none}   /* 上段は箱を 2 つに分け、空き枡の背景を切る */
     #ctrl > .grp:not(#axes){gap:32px} #theme,#shadowBox{background:rgba(var(--fg-a),var(--boxa));padding:4px 6px;border-radius:14px;gap:6px}
-    #theme .btn{width:32px;height:30px;border-radius:8px} #axes #flip{margin-right:0}
+    #theme .btn{width:32px;height:30px;border-radius:8px} #shadowBtn{width:32px;height:30px;border-radius:8px;padding:0} #axes #flip{margin-right:0}
     .btn.lb span{display:none} .btn.lb{padding:0;width:32px}
     #rail{bottom:44px;gap:14px}
     #hint{bottom:176px}
@@ -208,6 +211,11 @@
   <div id="about" role="dialog" aria-label="ABOUT">
     <div class="col">
       <button class="x" id="aboutClose" title="閉じる"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <p class="note intro">「Spectre」は、2023年に見つかった「非周期モノタイル」です。たった一種類の形を回転させながら並べるだけで平面を無限に埋め尽くせます。しかも、同じ配置が周期的に繰り返されることはありません。</p>
+      <p class="note intro follow">このサイトでは、折り紙で厳密に再現したそのタイルが敷き詰められていく様子を体験できます。TUTORIAL では、46工程の 3D 折り図を見ながら実際にタイルを折ることができます。</p>
+      <p class="note en">Spectre is an aperiodic monotile discovered in 2023. Copies of this single shape, placed with rotations alone, cover the plane without end, and yet the arrangement never repeats periodically.</p>
+      <p class="note en follow">This site lets you watch that tile, reproduced exactly in origami, spread across the plane. In TUTORIAL you can fold the tile yourself, following a 3D diagram of 46 steps.</p>
+      <div class="hr"></div>
       <div class="kicker">ORIGAMI DESIGN · TUTORIAL</div>
       <div class="name">YAMAMOTO TAIGA</div>
       <div class="sns">
@@ -222,7 +230,7 @@
         <dt>FOLD SIMULATION</dt><dd><a href="https://github.com/oriedita/oriedita" target="_blank" rel="noopener">Oriedita</a></dd>
       </dl>
       <div class="hr"></div>
-      <p class="note">当サイトで用いている折り紙作品の形状は、厳密には直線の辺だけで作られた「Tile(1,1)」です。「Spectre」は、本来「Tile(1,1)」の辺の形を変えて鏡像の使用を構造的に禁じた形を指します。タイリング画面のボタンで、同じ配置を曲線の輪郭で見ることができます。</p>
+      <p class="note">当サイトで用いている折り紙作品の形状は、厳密には直線の辺だけで作られた「Tile(1,1)」と呼ばれるものです。「Spectre」は、本来「Tile(1,1)」の辺の形を変えて鏡像の使用を構造的に禁じた形を指します。タイリング画面のボタンで、同じ配置を曲線の輪郭で見ることができます。</p>
       <p class="note en">Strictly speaking, the origami shape used on this site is Tile(1,1), formed by straight edges only. “Spectre” properly refers to the shape obtained by reshaping the edges of Tile(1,1) so that mirror images are structurally excluded. The toggle on the tiling screen shows the same arrangement with curved outlines.</p>
     </div>
   </div>
