@@ -193,7 +193,7 @@
   </div>
   <div id="hint" style="display:none"></div>
   <div id="nav">
-    <button class="navb" id="navTop" title="トップへ戻る" hidden>TOP</button>
+    <button class="navb" id="navTop" title="トップへ戻る">TOP</button>
     <button class="navb" id="navTutorial" title="折り方のチュートリアルへ">TUTORIAL</button>
     <button class="navb" data-about title="作者とクレジット">ABOUT</button>
   </div>
@@ -1282,7 +1282,7 @@ function render(now){
   }
   const A=viewA(now);
   const chromeUI=!(mode==="paper"||mode==="coloring"||mode==="aligning"||mode==="folding"||mode==="unfolding");
-  document.getElementById('navTop').hidden=!chromeUI; document.getElementById('wrap').classList.toggle('tiling',chromeUI);
+  document.getElementById('navTop').classList.toggle('cur',!chromeUI); document.getElementById('wrap').classList.toggle('tiling',chromeUI);   // メニューは終始 TOP / TUTORIAL / ABOUT。題字の画面では TOP を現在地として表示
   ctrl.style.opacity=chromeUI?"1":"0";
   ctrl.style.pointerEvents=chromeUI?"auto":"none";
   titleWord.style.opacity=(mode==="paper"&&smooth01((now-titleIntroT-100)/900)>0.05)?"1":"0";
