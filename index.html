@@ -2,12 +2,13 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%23070b0e%22%2F%3E%3Cg%20transform%3D%22translate%2832%2032%29%20scale%280.125%29%20translate%28-129%20-211.5%29%22%3E%3Cpath%20d%3D%22M129%208L174%2052L158%20112L216%20125L247%20245L204%20287L247%20331L231%20390L172%20374L129%20415L86%20374L27%20390L11%20331L54%20287L11%20245L42%20125L101%20112L86%2052Z%22%20fill%3D%22%23e9efec%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Spectre Units</title>
 <style>
   :root{
     --ink:#070b0e; --text:#e9efec; --sub:#839197; --gold:#b8c6c9; --hair:#29343a;
-    --mono:"SF Mono","Consolas",ui-monospace,monospace;
+    --mono:"SF Mono","Consolas",ui-monospace,monospace; --ink-a:7,11,14; --fg-a:255,255,255;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html,body{height:100%; overflow:hidden;}
@@ -50,12 +51,12 @@
     -webkit-backdrop-filter:blur(1.4px) saturate(.90) brightness(1.01);
     mask-image:radial-gradient(ellipse 62% 58% at 50% 50%,black 0 32%,rgba(0,0,0,.78) 48%,transparent 78%);
     -webkit-mask-image:radial-gradient(ellipse 62% 58% at 50% 50%,black 0 32%,rgba(0,0,0,.78) 48%,transparent 78%);
-    opacity:1; transition:none;
+    opacity:1; transition:none; will-change:opacity;
   }
   #titleWord{
     position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
     pointer-events:none; user-select:none; white-space:nowrap;
-    font:600 min(8.6vw,8.6vh,78px)/1 "Bahnschrift SemiCondensed","Arial Narrow","Helvetica Neue",Arial,sans-serif;
+    font:600 min(14vw,8.6vh,78px)/1 "Bahnschrift SemiCondensed","Arial Narrow","Helvetica Neue",Arial,sans-serif;
     letter-spacing:.18em; color:transparent;
     filter:none; text-shadow:none;
     opacity:1; transition:opacity .46s cubic-bezier(.22,.61,.36,1);
@@ -67,7 +68,7 @@
     position:absolute; inset:0; width:100%; height:100%; pointer-events:none;
     mix-blend-mode:screen;
     filter:drop-shadow(0 0 4px rgba(255,253,248,.42)) drop-shadow(0 0 9px rgba(246,241,231,.20));
-    opacity:1; transition:none;
+    opacity:1; transition:none; will-change:opacity;
   }
   #mark{ opacity:0; position:absolute; top:20px; left:24px; pointer-events:none; user-select:none; transition:opacity .8s; }
   #mark .t{ font-family:var(--mono); font-size:12px; letter-spacing:.34em; color:var(--text); }
@@ -87,7 +88,7 @@
     width:23px; height:23px; flex:0 0 auto; border-radius:50%; border:1px solid rgba(255,255,255,.52);
     cursor:pointer; padding:0; transition:transform .18s cubic-bezier(.34,1.56,.64,1);
   }
-  .sw button:hover{ transform:scale(1.25); }
+  @media (hover:hover){ .sw button:hover{ transform:scale(1.25); } }   /* タッチ端末では押した後に hover が残り 1.25 倍のまま見えるため、マウスのある端末だけ */
   .sw button.on{ outline:2px solid var(--gold); outline-offset:2px; }
   .sw button[data-v="four"]{
     border:1px solid rgba(246,255,255,.96);
@@ -98,6 +99,9 @@
   .sw button.lamp.on{ outline:none; }
   .sw button.lamp svg{ overflow:visible; transition:filter .3s; }
   .sw button.lamp path{ transition:fill .3s,opacity .3s; }
+  /* 曲線（SPECTRE）のアイコンは 1.2 倍、Mystic は 0.9 倍。箱も同じ比で */
+  .sw button[data-v="curve"]{ width:29px; } .sw button[data-v="curve"] svg{ width:26px; height:26px; }
+  .sw button[data-v="mystic"]{ width:22px; height:26px; } .sw button[data-v="mystic"] svg{ width:16px; height:25px; }
   .divider{ width:1px; height:18px; background:var(--hair); }
   #btnPal,#btnReset{
     font-family:var(--mono); font-size:10.5px; letter-spacing:.18em;
@@ -115,6 +119,43 @@
   }
   @keyframes pulse{ 0%,100%{opacity:.72;} 50%{opacity:1;} }
   #hint.quiet{ animation:none; opacity:.82; }
+  /* 上部ナビ: TILING / TUTORIAL / ABOUT */
+  #nav{position:absolute;left:50%;top:22px;transform:translateX(-50%);display:flex;gap:28px;align-items:center;opacity:0;pointer-events:none;transition:opacity .8s;z-index:5}
+  #nav.show{opacity:1;pointer-events:auto}
+  .navb{font-family:var(--mono);font-size:10.5px;letter-spacing:.3em;color:var(--text);background:transparent;border:0;border-bottom:1px solid transparent;
+        padding:6px 2px 5px;cursor:pointer;opacity:.72;transition:opacity .25s,border-color .25s}
+  .navb:hover{opacity:1;border-bottom-color:var(--gold)}
+  .navb.cur{opacity:1;border-bottom-color:rgba(233,239,236,.5);cursor:default}
+  /* ページを離れるときの暗転（TUTORIAL へ） */
+  #fade{position:absolute;inset:0;background:#070b0e;opacity:0;pointer-events:none;z-index:60;transition:opacity .75s cubic-bezier(.33,0,.25,1)}
+  #wrap.leaving #cv{filter:blur(7px) brightness(.55) !important;transform:scale(1.07);transition:filter .75s,transform .75s}
+  #wrap.leaving #nav,#wrap.leaving #mark,#wrap.leaving #ctrl,#wrap.leaving #hint,#wrap.leaving #titleFx,#wrap.leaving #titleBackdrop{opacity:0 !important;transition:opacity .35s}
+  @media (max-width:640px){ #nav{top:74px;gap:14px} .navb{font-size:9.5px;letter-spacing:.22em} }
+
+  /* ABOUT: 画面いっぱいの薄い幕に、左揃えの一列。箱は作らない */
+  #about{position:absolute;inset:0;z-index:40;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;-webkit-overflow-scrolling:touch;background:rgba(var(--ink-a),.86);
+         backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+  #about.show{display:flex}
+  #about .x{position:absolute;right:-6px;top:10px;width:36px;height:36px;border:0;background:transparent;color:var(--text);cursor:pointer;
+            display:inline-flex;align-items:center;justify-content:center;opacity:.8;transition:opacity .2s}
+  #about .x svg{width:18px;height:18px;stroke:currentColor;stroke-width:1.5;fill:none;stroke-linecap:round}
+  #about .x:hover{opacity:1}
+  #about .col{position:relative;width:min(600px,86vw);color:var(--text);margin:auto;padding:56px 0 48px}
+  #about .kicker{font-family:var(--mono);font-size:10px;letter-spacing:.4em;color:var(--text)}
+  #about .name{font:400 16px/1.4 "Hiragino Sans","Yu Gothic UI",sans-serif;letter-spacing:.14em;margin:14px 0 10px;color:var(--text)}
+  #about .role{font-family:var(--mono);font-size:10px;letter-spacing:.26em;color:var(--text)}
+  #about .sns{display:flex;gap:18px;margin:26px 0 0}
+  #about .sns a{color:var(--text);display:inline-flex;transition:opacity .2s;opacity:.85} #about .sns a:hover{opacity:1}
+  #about .sns svg{width:20px;height:20px;fill:currentColor}
+  #about .hr{height:1px;background:rgba(var(--fg-a),.14);margin:30px 0 26px}
+  #about dl{display:grid;grid-template-columns:160px 1fr;column-gap:24px;row-gap:18px;margin:0;align-items:baseline}
+  #about dt{font-family:var(--mono);font-size:12px;line-height:1.55;letter-spacing:.22em;color:var(--text);padding:0}
+  #about dd{margin:0;font-size:12px;line-height:1.55;color:var(--text)}
+  #about dd small{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--text);margin-top:3px}
+  #about dd a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(var(--fg-a),.35);padding-bottom:3px} #about dd a:hover{border-color:var(--text)}
+  #about .note{font-size:13px;line-height:2;color:var(--text);margin-top:26px;letter-spacing:.02em;text-align:justify}
+  #about .note.en{font-size:12px;line-height:1.75;margin-top:14px;font-family:"Helvetica Neue",Arial,"Hiragino Sans",sans-serif;letter-spacing:.01em;text-align:left}
+  @media (max-width:640px){ #about dl{grid-template-columns:1fr;row-gap:6px} #about dt{margin-top:10px} #about .col{width:84vw} }
   #boot{ position:absolute; inset:0; background:#070b0e; z-index:99;
          pointer-events:none; opacity:1;
          transition:opacity 2.1s cubic-bezier(.33,0,.25,1); }
@@ -137,6 +178,11 @@
   <div id="ctrl">
     <div class="sw" id="colBtns">
       <button data-v="four"  style="background:conic-gradient(#d9b85c 0 25%,#ee6c4d 0 50%,#f4f1de 0 75%,#b3923f 0)" title="PALETTE"></button>
+      <button data-v="curve" class="lamp" title="SPECTRE">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" style="overflow:visible">
+          <path id="curveIco" d="M4 12 C 7 8, 9 16, 12 12 S 17 8, 20 12" fill="none" stroke="#39484e" stroke-width="2.2" stroke-linecap="round" style="opacity:.64"/>
+        </svg>
+      </button>
       <button data-v="mystic" class="lamp" title="MYSTIC">
         <svg viewBox="0 0 258 423" width="18" height="28" aria-hidden="true">
           <path d="M129 8L174 52L158 112L216 125L247 245L204 287L247 331L231 390L172 374L129 415L86 374L27 390L11 331L54 287L11 245L42 125L101 112L86 52Z"
@@ -145,7 +191,33 @@
       </button>
     </div>
   </div>
-  <div id="hint">CLICK — FOLD AND LAY</div>
+  <div id="hint" style="display:none"></div>
+  <div id="nav">
+    <button class="navb" id="navTiling" title="タイリングを見る">TILING</button>
+    <button class="navb" id="navTutorial" title="折り方のチュートリアルへ">TUTORIAL</button>
+    <button class="navb" data-about title="作者とクレジット">ABOUT</button>
+  </div>
+  <div id="about" role="dialog" aria-label="ABOUT">
+    <div class="col">
+      <button class="x" id="aboutClose" title="閉じる"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <div class="kicker">ORIGAMI DESIGN · TUTORIAL</div>
+      <div class="name">YAMAMOTO TAIGA</div>
+      <div class="sns">
+        <a href="https://x.com/ngor_ong" target="_blank" rel="noopener" title="X"><svg viewBox="0 0 24 24"><path d="M18.9 2H22l-7.4 8.5L23 22h-6.8l-5.3-6.9L4.8 22H1.7l7.9-9L1 2h7l4.8 6.3L18.9 2zm-1.2 18h1.9L7.3 3.9H5.3L17.7 20z"/></svg></a>
+        <a href="https://www.instagram.com/t_yamam0t0/" target="_blank" rel="noopener" title="Instagram"><svg viewBox="0 0 24 24"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8.2a3.2 3.2 0 1 1 0-6.4 3.2 3.2 0 0 1 0 6.4zM17.4 5.4a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4zM21.9 7.8c-.1-1.6-.4-3-1.6-4.1S17.8 2.2 16.2 2.1C14.6 2 9.4 2 7.8 2.1S4.8 2.5 3.7 3.7 2.2 6.2 2.1 7.8C2 9.4 2 14.6 2.1 16.2s.4 3 1.6 4.1 2.5 1.5 4.1 1.6c1.6.1 6.8.1 8.4 0s3-.4 4.1-1.6 1.5-2.5 1.6-4.1c.1-1.6.1-6.8 0-8.4zM19.8 18c-.3.9-1 1.5-1.8 1.8-1.3.5-4.3.4-5.9.4s-4.6.1-5.9-.4c-.9-.3-1.5-1-1.8-1.8-.5-1.3-.4-4.3-.4-5.9s-.1-4.6.4-5.9c.3-.9 1-1.5 1.8-1.8 1.3-.5 4.3-.4 5.9-.4s4.6-.1 5.9.4c.9.3 1.5 1 1.8 1.8.5 1.3.4 4.3.4 5.9s.1 4.6-.4 5.9z"/></svg></a>
+      </div>
+      <div class="hr"></div>
+      <dl>
+        <dt>SPECTRE TILE</dt><dd>David Smith · Joseph Samuel Myers · Craig S. Kaplan · Chaim Goodman-Strauss<small>“A CHIRAL APERIODIC MONOTILE” — 2023</small></dd>
+        <dt>3D</dt><dd><a href="https://threejs.org/" target="_blank" rel="noopener">three.js</a></dd>
+        <dt>FOLD SIMULATION</dt><dd><a href="https://github.com/oriedita/oriedita" target="_blank" rel="noopener">Oriedita</a></dd>
+      </dl>
+      <div class="hr"></div>
+      <p class="note">当サイトで用いている折り紙作品の形状は、厳密には直線の辺だけで作られた「Tile(1,1)」です。「Spectre」は、本来「Tile(1,1)」の辺の形を変えて鏡像の使用を構造的に禁じた形を指します。タイリング画面のボタンで、同じ配置を曲線の輪郭で見ることができます。</p>
+      <p class="note en">Strictly speaking, the origami shape used on this site is Tile(1,1), formed by straight edges only. “Spectre” properly refers to the shape obtained by reshaping the edges of Tile(1,1) so that mirror images are structurally excluded. The toggle on the tiling screen shows the same arrangement with curved outlines.</p>
+    </div>
+  </div>
+  <div id="fade"></div>
   <div id="boot"></div>
 </div>
 <script>
@@ -519,7 +591,22 @@ function seamPath(polys){
   }
   return p;
 }
-const PATH_OUTLINE=outlinePath();
+function curvedPath(k=0.16){
+  const p=new Path2D();
+  p.moveTo(PTS[0][0],PTS[0][1]);
+  for(let i=0;i<14;i++){
+    const a=PTS[i], b=PTS[(i+1)%14];
+    const dx=b[0]-a[0], dy=b[1]-a[1];
+    const nx=-dy, ny=dx;                           // 左法線（辺の長さは 1）
+    const c1x=a[0]+dx/3+nx*k, c1y=a[1]+dy/3+ny*k;
+    const c2x=a[0]+2*dx/3-nx*k, c2y=a[1]+2*dy/3-ny*k;
+    p.bezierCurveTo(c1x,c1y,c2x,c2y,b[0],b[1]);
+  }
+  p.closePath(); return p;
+}
+const PATH_STRAIGHT=outlinePath(), PATH_CURVED=curvedPath();
+let curved=false;                                  // 曲線の輪郭で見せる（折り紙の形は捨て、輪郭だけ）
+let PATH_OUTLINE=PATH_STRAIGHT;
 const SEAM=seamPath(MOTIF.front);
 // Claude handover palette: light gold, red, white, deep gold.
 const DEFAULT_PAL=["#d9b85c","#ee6c4d","#f4f1de","#b3923f"];
@@ -710,7 +797,7 @@ function rebuildTitleFx(){
   titleFx.width=Math.round(fxW*fxDpr);titleFx.height=Math.round(fxH*fxDpr);
   const oc=document.createElement("canvas");oc.width=fxW;oc.height=fxH;
   const ox=oc.getContext("2d",{willReadFrequently:true});
-  const fs=Math.max(20,Math.min(Math.min(fxW,fxH)*.086,78));
+  const fs=Math.max(20,Math.min(fxW*(fxH>fxW?.14:.086),fxH*.086,78));   // 縦持ちは横幅の 14%（2026-09-17）
   fxK=fs/78;                       // every spatial constant below is in units of fs
   const dotK=Math.sqrt(fxK);       // dot sizes shrink slower, so they stay visible
   const gap=fs*.28,condense=fs<52?.88:.82,text="SPECTRE";
@@ -982,6 +1069,7 @@ function bigBang(){
     c1:[SEED.cx,SEED.cy], onend:()=>{ cam.roll=wrapA(cam.roll); mode="free"; }};
 }
 function collapse(leaf){
+  if(curved){ curved=false; PATH_OUTLINE=PATH_STRAIGHT; refreshCurve(); }   // 畳んでトップへ戻るときは直線に戻す（2026-09-17 山本さん）
   const le=st.get(leaf.key);
   if(le&&le.col>=0) paperColIdx=le.col;
   mode="collapsing";
@@ -1177,12 +1265,13 @@ function render(now){
   ctrl.style.pointerEvents=chromeUI?"auto":"none";
   titleWord.style.opacity=(mode==="paper"&&smooth01((now-titleIntroT-100)/900)>0.05)?"1":"0";
   const introAlpha=smooth01((now-titleIntroT-100)/900);
+  { const nav=document.getElementById('nav'); nav.classList.toggle('show', chromeUI || (mode==="paper"&&introAlpha>0.05));
+    document.getElementById('navTiling').classList.toggle('cur', mode!=="paper"); }
   let titleAlpha=0;
   if(mode==="paper"||mode==="coloring")titleAlpha=introAlpha;
   else if(mode==="aligning")titleAlpha=introAlpha*(1-smooth01((now-alignT0)/Math.min(ALIGN_T,560)));
   else if(mode==="unfolding")titleAlpha=0;   // the word returns only after the sheet has settled
-  titleFx.style.opacity=titleAlpha.toFixed(4);
-  titleBackdrop.style.opacity=titleAlpha.toFixed(4);
+  { const o=Math.max(0.004,titleAlpha).toFixed(4); titleFx.style.opacity=o; titleBackdrop.style.opacity=o; }   // 層を消さない（0 にすると Chrome が層を作り直し一瞬ちらつく）
   const paperGrade=mode==="paper"||mode==="coloring"||mode==="aligning";
   const softGrade=mode==="folding"||mode==="seed"||mode==="unfolding"||
     (mode==="collapsing"&&returnColorT>0);
@@ -1214,8 +1303,7 @@ function render(now){
   cv.style.setProperty("--grade-sat",gradeSat.toFixed(4));
   cv.style.setProperty("--grade-contrast",gradeContrast.toFixed(4));
   cv.style.setProperty("--grade-brightness",gradeBrightness.toFixed(4));
-  cv.classList.toggle("paper-grade",paperGrade);
-  cv.classList.toggle("title-grade",!paperGrade&&softGrade);
+  cv.classList.toggle("paper-grade",paperGrade||softGrade);
   drawTitleFx(now);
   ctx.setTransform(DPR,0,0,DPR,0,0);
   ctx.fillStyle="#070b0e"; ctx.fillRect(0,0,W,H);
@@ -1351,7 +1439,7 @@ function render(now){
     const seamReveal=mode==="seed"?0:
       (mode==="collapsing"&&returnColorT)?1-smooth01((now-returnColorT)/RETURN_PREP):
       (colorBurstT&&now-colorBurstT<280?smooth01((now-colorBurstT)/280):1);
-    if(edgePx>7&&seamReveal>.002){
+    if(!curved&&edgePx>7&&seamReveal>.002){
       ctx.strokeStyle=`rgba(12,20,24,${.52*seamReveal})`; ctx.lineWidth=lwSeam; ctx.stroke(SEAM);
     }
     if(edgePx>2.5){
@@ -1529,6 +1617,16 @@ function zoomBy(fz){
 const colBtns=document.getElementById("colBtns");
 const btnFour=colBtns.querySelector('button[data-v="four"]');
 const btnMys=colBtns.querySelector('button[data-v="mystic"]');
+const btnCurve=colBtns.querySelector('button[data-v="curve"]');
+function refreshCurve(){
+  const ic=document.getElementById("curveIco");
+  ic.setAttribute("stroke",curved?"#f6ffff":"#39484e"); ic.style.opacity=curved?"1":".64";
+  btnCurve.querySelector("svg").style.filter=curved?
+    "drop-shadow(0 0 5px rgba(245,255,255,.98)) drop-shadow(0 0 12px rgba(190,232,240,.72))":
+    "drop-shadow(0 0 3px rgba(220,240,244,.34))";
+}
+btnCurve.addEventListener("click",()=>{ curved=!curved; PATH_OUTLINE=curved?PATH_CURVED:PATH_STRAIGHT; refreshCurve(); });
+refreshCurve();
 function refreshSwatches(){
   btnFour.style.background=`conic-gradient(${FOUR_PAL[0]} 0 25%,${FOUR_PAL[1]} 0 50%,${FOUR_PAL[2]} 0 75%,${FOUR_PAL[3]} 0)`;
   btnFour.classList.toggle("on",colorMode==="four");
@@ -1575,6 +1673,17 @@ resize();
 })();
 requestAnimationFrame(frame);
 
+// ---- ナビ ----
+document.getElementById('navTiling').addEventListener('click',()=>{ if(mode==="paper") startFold(); });
+function goTutorial(){ const wrap=document.getElementById('wrap'); wrap.classList.add('leaving'); document.getElementById('fade').style.opacity='1';
+  setTimeout(()=>{ location.href='tutorial.html?from=top'; },780); }
+document.getElementById('navTutorial').addEventListener('click',goTutorial);
+
+(function(){ const ab=document.getElementById('about'); const open=()=>ab.classList.add('show'), close=()=>ab.classList.remove('show');
+  for(const b of document.querySelectorAll('[data-about]')) b.addEventListener('click',open);
+  document.getElementById('aboutClose').addEventListener('click',close);
+  ab.addEventListener('click',e=>{ if(e.target===ab) close(); });
+  addEventListener('keydown',e=>{ if(e.key==='Escape') close(); }); })();
 </script>
 </body>
 </html>
